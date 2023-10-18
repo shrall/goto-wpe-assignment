@@ -22,6 +22,7 @@
     "react-dom": "^18",
     "react-hook-form": "^7.47.0",
     "react-icons": "^4.11.0",
+    "sonner": "^1.0.3",
     "use-debounce": "^9.0.4"
   },
   "devDependencies": {

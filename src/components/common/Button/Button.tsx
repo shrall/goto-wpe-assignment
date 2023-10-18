@@ -1,10 +1,12 @@
 import clsx from "clsx";
 import React from "react";
 import { IconType } from "react-icons";
+import { BiLoaderAlt } from "react-icons/bi";
 
 const ButtonVariant = ["primary", "light"] as const;
 
 type ButtonProps = {
+  isLoading?: boolean;
   icon?: IconType;
   variant?: (typeof ButtonVariant)[number];
   classNames?: {
@@ -17,6 +19,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     {
       children,
       className,
+      isLoading = false,
       icon: ButtonIcon,
       variant = "primary",
       classNames,
@@ -37,13 +40,20 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         )}
         {...rest}
       >
-        {ButtonIcon && (
-          <ButtonIcon
-            className={clsx("-ml-1 mr-2 h-5 w-5", classNames?.icon)}
-            aria-hidden="true"
-          />
+        {isLoading && (
+          <BiLoaderAlt className="h-5 w-5 animate-spin" aria-hidden="true" />
         )}
-        {children}
+        {!isLoading && (
+          <>
+            {ButtonIcon && (
+              <ButtonIcon
+                className={clsx("-ml-1 mr-2 h-5 w-5", classNames?.icon)}
+                aria-hidden="true"
+              />
+            )}
+            {children}
+          </>
+        )}
       </button>
     );
   }

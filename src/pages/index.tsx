@@ -142,9 +142,11 @@ export default function Home() {
                 />
               </div>
             </div>
-            <Button variant="primary" icon={AiOutlinePlus}>
-              <Link href="/contact/create">Add new contact</Link>
-            </Button>
+            <Link href="/contact/create">
+              <Button variant="primary" icon={AiOutlinePlus}>
+                Add new contact
+              </Button>
+            </Link>
           </div>
           <hr className="mb-4" />
           <section>
