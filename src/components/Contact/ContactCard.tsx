@@ -13,10 +13,11 @@ import ButtonLink from "../common/Button/ButtonLink";
 type ContactCardProps = {
   contact: Contact;
   toggleFavorite: (contact: Contact) => void;
+  setDeleteId: (value: React.SetStateAction<number | null>) => void;
 } & React.ComponentPropsWithoutRef<"li">;
 
 const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
-  ({ className, contact, toggleFavorite, ...rest }, ref) => {
+  ({ className, contact, toggleFavorite, setDeleteId, ...rest }, ref) => {
     return (
       <li
         ref={ref}
@@ -59,7 +60,7 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
                           active
                             ? "bg-gray-100 text-gray-900"
                             : "text-gray-700",
-                          "block px-4 py-2 text-sm"
+                          "block px-4 py-2 text-sm w-full text-left"
                         )}
                       >
                         Edit
@@ -68,15 +69,18 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
-                      <a
-                        href="#"
+                      <button
+                        onClick={() => {
+                          setDeleteId(contact.id);
+                        }}
+                        type="button"
                         className={clsx(
                           active && "bg-gray-100",
-                          "block px-4 py-2 text-sm text-red-600"
+                          "block px-4 py-2 text-sm text-red-600 w-full text-left"
                         )}
                       >
                         Delete
-                      </a>
+                      </button>
                     )}
                   </Menu.Item>
                 </div>

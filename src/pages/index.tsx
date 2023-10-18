@@ -1,9 +1,12 @@
-import { gql, useQuery } from "@apollo/client";
+import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import React, { useEffect, useState } from "react";
-import { AiOutlinePhone, AiOutlineStar } from "react-icons/ai";
-import { AiOutlineSearch } from "react-icons/ai";
-import { AiOutlinePlus } from "react-icons/ai";
+import {
+  AiOutlinePhone,
+  AiOutlinePlus,
+  AiOutlineSearch,
+  AiOutlineStar,
+} from "react-icons/ai";
 import { CgSpinner } from "react-icons/cg";
 import { useDebounce } from "use-debounce";
 
@@ -13,20 +16,10 @@ import ContactCardEmptyState from "@/components/Contact/ContactCardEmptyState";
 import Layout from "@/components/layout/Layout";
 
 import { Contact, ContactData } from "@/interfaces/Contact";
-
-export const GET_CONTACT_LIST_QUERY = gql`
-  query GetContactList($limit: Int, $offset: Int, $where: contact_bool_exp) {
-    contact(limit: $limit, offset: $offset, where: $where) {
-      created_at
-      first_name
-      id
-      last_name
-      phones {
-        number
-      }
-    }
-  }
-`;
+import {
+  GET_CONTACT_LIST_QUERY,
+  MUTATION_DELETE_CONTACT,
+} from "@/queries/Contact";
 
 export default function Home() {
   const [limit, setLimit] = React.useState(10);
@@ -36,6 +29,8 @@ export default function Home() {
 
   const [favorites, setFavorites] = useState<Contact[]>([]);
   const [filteredFavorites, setFilteredFavorites] = useState<Contact[]>([]);
+
+  const [deleteId, setDeleteId] = useState<number | null>(null);
 
   useEffect(() => {
     const storedFavorites = JSON.parse(
@@ -80,6 +75,21 @@ export default function Home() {
       },
     },
   });
+
+  const [deleteContact] = useMutation(MUTATION_DELETE_CONTACT, {
+    variables: {
+      id: deleteId,
+    },
+  });
+
+  useEffect(() => {
+    if (deleteId) {
+      deleteContact().then(() => {
+        setDeleteId(null);
+        refetch();
+      });
+    }
+  }, [deleteId, deleteContact, refetch]);
 
   React.useEffect(() => {
     setFilteredFavorites(
@@ -163,6 +173,7 @@ export default function Home() {
                     key={contact.id}
                     contact={contact}
                     toggleFavorite={toggleFavorite}
+                    setDeleteId={setDeleteId}
                     className="mb-4"
                   />
                 ))}
@@ -196,6 +207,7 @@ export default function Home() {
                     key={contact.id}
                     contact={contact}
                     toggleFavorite={toggleFavorite}
+                    setDeleteId={setDeleteId}
                     className="mb-4"
                   />
                 ))}
