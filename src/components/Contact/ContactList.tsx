@@ -107,7 +107,7 @@ const ContactList = React.forwardRef<
                 height={400}
                 className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
               />
-              <MdStars className="absolute h-8 w-8 top-0 right-0 bg-white border border-white rounded-full text-gray-400 hover:text-yellow-500 cursor-pointer" />
+              <MdStars className="absolute h-10 w-10 top-0 -right-2 bg-white border border-white rounded-full text-gray-400 hover:text-yellow-500 cursor-pointer" />
             </div>
             <h3 className="mt-6 text-sm font-medium text-gray-900">
               {person.name}
