@@ -1,6 +1,7 @@
+import Link from "next/link";
 import { AiOutlinePlus } from "react-icons/ai";
 
-import ButtonLink from "@/components/common/Button/ButtonLink";
+import Button from "@/components/common/Button/Button";
 import ContactList from "@/components/Contact/ContactList";
 import Layout from "@/components/layout/Layout";
 
@@ -13,9 +14,9 @@ export default function Home() {
             <h2 className="text-2xl font-bold tracking-tight text-gray-900">
               Phonebook
             </h2>
-            <ButtonLink href="#" icon={AiOutlinePlus}>
-              Add new contact
-            </ButtonLink>
+            <Button variant="primary" icon={AiOutlinePlus}>
+              <Link href="/contact/create">Add new contact</Link>
+            </Button>
           </div>
           <ContactList className="mb-2" />
           <nav
@@ -23,18 +24,8 @@ export default function Home() {
             aria-label="Pagination"
           >
             <div className="flex flex-1 gap-x-2 justify-between md:justify-end">
-              <div
-                // onClick={nextPage}
-                className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
-              >
-                Prev
-              </div>
-              <div
-                // onClick={nextPage}
-                className="relative inline-flex items-center rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 cursor-pointer"
-              >
-                Next
-              </div>
+              <Button variant="light">Prev</Button>
+              <Button variant="light">Next</Button>
             </div>
           </nav>
         </div>
