@@ -10,6 +10,7 @@ import { toast } from "sonner";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 
+import { REGEX } from "@/constant/regex";
 import { ContactData, ContactDetails } from "@/interfaces/Contact";
 import {
   GET_CONTACT_DETAILS_QUERY,
@@ -72,7 +73,11 @@ function ContactEditPage() {
   const onSubmit = (data: FormValues) => {
     const { firstName, lastName } = data;
     const contactExists = contactData?.contact.some((contact) => {
-      return contact.first_name === firstName && contact.last_name === lastName;
+      return (
+        contact.id !== parseInt(id as string) &&
+        contact.first_name === firstName &&
+        contact.last_name === lastName
+      );
     });
     if (contactExists) {
       toast.error("Contact already exists.");
@@ -159,6 +164,11 @@ function ContactEditPage() {
                         id="firstName"
                         validation={{
                           required: "First name is required.",
+                          pattern: {
+                            value: REGEX.NO_SPECIAL_CHARACTERS,
+                            message:
+                              "First name cannot contain special characters.",
+                          },
                         }}
                         error={methods.formState.errors.firstName?.message}
                       />
@@ -170,6 +180,11 @@ function ContactEditPage() {
                         id="lastName"
                         validation={{
                           required: "Last name is required.",
+                          pattern: {
+                            value: REGEX.NO_SPECIAL_CHARACTERS,
+                            message:
+                              "Last name cannot contain special characters.",
+                          },
                         }}
                         error={methods.formState.errors.lastName?.message}
                       />

@@ -106,7 +106,7 @@ function ContactCreatePage() {
                           pattern: {
                             value: REGEX.NO_SPECIAL_CHARACTERS,
                             message:
-                              "First name cannot contain special characters.",
+                              "Last name cannot contain special characters.",
                           },
                         }}
                         error={methods.formState.errors.lastName?.message}
