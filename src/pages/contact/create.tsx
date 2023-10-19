@@ -93,7 +93,6 @@ function ContactCreatePage() {
                               "First name cannot contain special characters.",
                           },
                         }}
-                        error={methods.formState.errors.firstName?.message}
                       />
                     </div>
 
@@ -109,7 +108,6 @@ function ContactCreatePage() {
                               "Last name cannot contain special characters.",
                           },
                         }}
-                        error={methods.formState.errors.lastName?.message}
                       />
                     </div>
 
@@ -125,10 +123,6 @@ function ContactCreatePage() {
                             validation={{
                               required: "Phone number cannot be empty.",
                             }}
-                            error={
-                              methods.formState.errors.phones?.[index]?.number
-                                ?.message
-                            }
                           />
                           <button
                             onClick={() => {

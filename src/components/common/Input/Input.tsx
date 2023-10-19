@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import get from "lodash.get";
 import * as React from "react";
 import { RegisterOptions, useFormContext } from "react-hook-form";
 import { RiErrorWarningFill } from "react-icons/ri";
@@ -8,7 +9,6 @@ export type InputProps = {
   id: string;
   type?: React.HTMLInputTypeAttribute;
   validation?: RegisterOptions;
-  error?: string | null;
 } & React.ComponentPropsWithoutRef<"input">;
 
 export default function Input({
@@ -16,11 +16,14 @@ export default function Input({
   id,
   type = "text",
   validation,
-  error = null,
   disabled = false,
   ...rest
 }: InputProps) {
-  const { register } = useFormContext();
+  const {
+    register,
+    formState: { errors },
+  } = useFormContext();
+  const error = get(errors, id);
   return (
     <div className="flex-1">
       <label htmlFor={id} className="block text-sm font-normal text-gray-700">
@@ -48,7 +51,11 @@ export default function Input({
         )}
       </div>
       <div className="mt-1">
-        {error && <span className="text-sm text-red-500">{error}</span>}
+        {error && (
+          <span className="text-sm text-red-500">
+            {error.message?.toString()}
+          </span>
+        )}
       </div>
     </div>
   );
