@@ -9,6 +9,7 @@ import { toast } from "sonner";
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 
+import { REGEX } from "@/constant/regex";
 import { ContactData } from "@/interfaces/Contact";
 import {
   GET_CONTACT_LIST_QUERY,
@@ -86,6 +87,11 @@ function ContactCreatePage() {
                         id="firstName"
                         validation={{
                           required: "First name is required.",
+                          pattern: {
+                            value: REGEX.NO_SPECIAL_CHARACTERS,
+                            message:
+                              "First name cannot contain special characters.",
+                          },
                         }}
                         error={methods.formState.errors.firstName?.message}
                       />
@@ -97,6 +103,11 @@ function ContactCreatePage() {
                         id="lastName"
                         validation={{
                           required: "Last name is required.",
+                          pattern: {
+                            value: REGEX.NO_SPECIAL_CHARACTERS,
+                            message:
+                              "First name cannot contain special characters.",
+                          },
                         }}
                         error={methods.formState.errors.lastName?.message}
                       />
