@@ -1,6 +1,6 @@
-import { useMutation, useQuery } from "@apollo/client";
+import { useQuery } from "@apollo/client";
 import Link from "next/link";
-import React, { useEffect, useState } from "react";
+import React from "react";
 import {
   AiOutlinePhone,
   AiOutlinePlus,
@@ -16,10 +16,7 @@ import ContactCardEmptyState from "@/components/Contact/ContactCardEmptyState";
 import Layout from "@/components/layout/Layout";
 
 import { Contact, ContactData } from "@/interfaces/Contact";
-import {
-  GET_CONTACT_LIST_QUERY,
-  MUTATION_DELETE_CONTACT,
-} from "@/queries/Contact";
+import { GET_CONTACT_LIST_QUERY } from "@/queries/Contact";
 
 export default function Home() {
   const [limit] = React.useState(10);
@@ -27,26 +24,24 @@ export default function Home() {
   const [searchQuery, setSearchQuery] = React.useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);
 
-  const [favorites, setFavorites] = useState<Contact[]>([]);
-  const [filteredFavorites, setFilteredFavorites] = useState<Contact[]>([]);
+  const [favorites, setFavorites] = React.useState<Contact[]>([]);
 
-  const [deleteId, setDeleteId] = useState<number | null>(null);
-
-  useEffect(() => {
-    const storedFavorites = JSON.parse(
-      localStorage.getItem("favorites") || "[]"
-    );
-    setFavorites(storedFavorites);
+  React.useEffect(() => {
+    setFavorites(JSON.parse(localStorage.getItem("favorites") || "[]"));
   }, []);
 
+  const [filteredFavorites, setFilteredFavorites] = React.useState<Contact[]>(
+    []
+  );
+
   const toggleFavorite = (contact: Contact) => {
-    const isFavorite = favorites.some(
-      (favorite: Contact) => favorite.id === contact.id
+    const isFavorited = favorites.some(
+      (favorite) => favorite.id === contact.id
     );
 
-    if (isFavorite) {
+    if (isFavorited) {
       const newFavorites = favorites.filter(
-        (favorite: Contact) => favorite.id !== contact.id
+        (favorite) => favorite.id !== contact.id
       );
       setFavorites(newFavorites);
       localStorage.setItem("favorites", JSON.stringify(newFavorites));
@@ -59,6 +54,7 @@ export default function Home() {
 
   const {
     data: contacts,
+    previousData,
     loading,
     refetch,
   } = useQuery<ContactData>(GET_CONTACT_LIST_QUERY, {
@@ -75,21 +71,6 @@ export default function Home() {
       },
     },
   });
-
-  const [deleteContact] = useMutation(MUTATION_DELETE_CONTACT, {
-    variables: {
-      id: deleteId,
-    },
-  });
-
-  useEffect(() => {
-    if (deleteId) {
-      deleteContact().then(() => {
-        setDeleteId(null);
-        refetch();
-      });
-    }
-  }, [deleteId, deleteContact, refetch]);
 
   React.useEffect(() => {
     setFilteredFavorites(
@@ -153,29 +134,23 @@ export default function Home() {
             <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-2">
               Favorites
             </h2>
-            {filteredFavorites.length === 0 && (
+            {filteredFavorites.length === 0 ? (
               <ContactCardEmptyState
                 icon={AiOutlineStar}
                 title="Favorites"
                 description="The list is empty."
               />
-            )}
-            {filteredFavorites.length > 0 && (
+            ) : (
               <ul
                 role="list"
                 className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
               >
-                {loading && (
-                  <p className="col-span-4 flex items-center justify-center py-12">
-                    <CgSpinner className="animate-spin h-12 w-12 text-indigo-600" />
-                  </p>
-                )}
                 {filteredFavorites.map((contact) => (
                   <ContactCard
                     key={contact.id}
                     contact={contact}
                     toggleFavorite={toggleFavorite}
-                    setDeleteId={setDeleteId}
+                    onDelete={refetch}
                     className="mb-4"
                   />
                 ))}
@@ -187,29 +162,28 @@ export default function Home() {
             <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-2">
               Contacts
             </h2>
-            {contacts && contacts.contact.length === 0 && (
+            {contacts?.contact.length === 0 ? (
               <ContactCardEmptyState
                 icon={AiOutlinePhone}
                 title="Contacts"
                 description="The list is empty."
               />
-            )}
-            {contacts && contacts.contact.length > 0 && (
+            ) : (
               <ul
                 role="list"
                 className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4"
               >
-                {loading && (
+                {loading && !previousData && (
                   <p className="col-span-4 flex items-center justify-center py-12">
                     <CgSpinner className="animate-spin h-12 w-12 text-indigo-600" />
                   </p>
                 )}
-                {contacts.contact.map((contact) => (
+                {contacts?.contact.map((contact) => (
                   <ContactCard
                     key={contact.id}
                     contact={contact}
                     toggleFavorite={toggleFavorite}
-                    setDeleteId={setDeleteId}
+                    onDelete={refetch}
                     className="mb-4"
                   />
                 ))}
