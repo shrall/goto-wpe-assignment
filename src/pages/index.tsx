@@ -22,7 +22,7 @@ import {
 } from "@/queries/Contact";
 
 export default function Home() {
-  const [limit, setLimit] = React.useState(10);
+  const [limit] = React.useState(10);
   const [offset, setOffset] = React.useState(0);
   const [searchQuery, setSearchQuery] = React.useState("");
   const [debouncedSearchQuery] = useDebounce(searchQuery, 500);

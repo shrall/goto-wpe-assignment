@@ -1,6 +1,7 @@
 import { Menu, Transition } from "@headlessui/react";
 import clsx from "clsx";
 import Image from "next/image";
+import Link from "next/link";
 import React, { Fragment } from "react";
 import { AiOutlineEllipsis } from "react-icons/ai";
 import { AiFillMessage, AiFillPhone } from "react-icons/ai";
@@ -54,26 +55,28 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
                 <div className="py-1">
                   <Menu.Item>
                     {({ active }) => (
-                      <a
-                        href="#"
-                        className={clsx(
-                          active
-                            ? "bg-gray-100 text-gray-900"
-                            : "text-gray-700",
-                          "block px-4 py-2 text-sm w-full text-left"
-                        )}
-                      >
-                        Edit
-                      </a>
+                      <Link href={`/contact/edit?id=${contact.id}`}>
+                        <button
+                          type="button"
+                          className={clsx(
+                            active
+                              ? "bg-gray-100 text-gray-900"
+                              : "text-gray-700",
+                            "block px-4 py-2 text-sm w-full text-left"
+                          )}
+                        >
+                          Edit
+                        </button>
+                      </Link>
                     )}
                   </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
                       <button
+                        type="button"
                         onClick={() => {
                           setDeleteId(contact.id);
                         }}
-                        type="button"
                         className={clsx(
                           active && "bg-gray-100",
                           "block px-4 py-2 text-sm text-red-600 w-full text-left"

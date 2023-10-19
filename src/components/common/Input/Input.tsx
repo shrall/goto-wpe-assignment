@@ -17,6 +17,7 @@ export default function Input({
   type = "text",
   validation,
   error = null,
+  disabled = false,
   ...rest
 }: InputProps) {
   const { register } = useFormContext();
@@ -34,8 +35,10 @@ export default function Input({
             error
               ? "border-red-500 focus:border-red-500 focus:ring-red-500"
               : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500",
+            disabled ? "bg-gray-100" : "bg-white",
             "block w-full rounded-md shadow-sm"
           )}
+          disabled={disabled}
         />
 
         {error && (
