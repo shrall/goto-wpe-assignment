@@ -76,7 +76,7 @@ export default function Home() {
             </Link>
           </div>
           <hr className="mb-4" />
-          <section>
+          <section aria-label="favorites">
             <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-2">
               Favorites
             </h2>
@@ -104,7 +104,7 @@ export default function Home() {
             )}
           </section>
           <hr className="mb-4" />
-          <section>
+          <section aria-label="contacts">
             <h2 className="text-xl font-semibold tracking-tight text-gray-900 mb-2">
               Contacts
             </h2>

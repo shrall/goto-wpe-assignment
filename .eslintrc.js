@@ -3,6 +3,7 @@ module.exports = {
     browser: true,
     es2021: true,
     node: true,
+    jest: true,
   },
   plugins: ["@typescript-eslint", "simple-import-sort", "unused-imports"],
   extends: [
@@ -10,6 +11,8 @@ module.exports = {
     "next",
     "next/core-web-vitals",
     "plugin:@typescript-eslint/recommended",
+    "plugin:jest-dom/recommended",
+    "plugin:testing-library/react",
     "prettier",
   ],
   rules: {

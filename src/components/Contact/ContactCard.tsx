@@ -112,24 +112,29 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
               height={400}
               className="mx-auto h-32 w-32 flex-shrink-0 rounded-full"
             />
-            <MdStars
+            <button
+              aria-label="favorite"
+              type="button"
               onClick={() => {
                 toggleFavorite(contact);
                 toast(
                   favorites.some(
                     (favorite: Contact) => favorite.id === contact.id
                   )
-                    ? `${contact.first_name} added from favorites.`
-                    : `${contact.first_name} removed to favorites.`
+                    ? `${contact.first_name} added to favorites.`
+                    : `${contact.first_name} removed from favorites.`
                 );
               }}
-              className={clsx(
-                "absolute h-10 w-10 top-0 -right-2 bg-white border border-white rounded-full text-gray-400 hover:text-yellow-500 cursor-pointer",
-                favorites.some(
-                  (favorite: Contact) => favorite.id === contact.id
-                ) && "text-yellow-500"
-              )}
-            />
+            >
+              <MdStars
+                className={clsx(
+                  "absolute h-10 w-10 top-0 -right-2 bg-white border border-white rounded-full text-gray-400 hover:text-yellow-500 cursor-pointer",
+                  favorites.some(
+                    (favorite: Contact) => favorite.id === contact.id
+                  ) && "text-yellow-500"
+                )}
+              />
+            </button>
           </div>
           <h3 className="mt-6 text-sm font-medium text-gray-900">
             {contact.first_name} {contact.last_name}
