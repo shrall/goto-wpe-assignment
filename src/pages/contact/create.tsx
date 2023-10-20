@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React from "react";
@@ -6,31 +5,23 @@ import { FormProvider, useFieldArray, useForm } from "react-hook-form";
 import { AiFillDelete } from "react-icons/ai";
 import { toast } from "sonner";
 
+import useAddContact from "@/hooks/Contact/useAddContact";
+
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 
 import { REGEX } from "@/constant/regex";
-import { ContactData } from "@/interfaces/Contact";
-import {
-  GET_CONTACT_LIST_QUERY,
-  MUTATION_ADD_CONTACT,
-} from "@/queries/Contact";
-
-type FormValues = {
-  firstName: string;
-  lastName: string;
-  phones: {
-    number: string;
-  }[];
-};
+import { ContactFormValues } from "@/interfaces/Contact";
 
 function ContactCreatePage() {
   const router = useRouter();
-  const methods = useForm<FormValues>({
+
+  const methods = useForm<ContactFormValues>({
     defaultValues: {
       phones: [{ number: "" }],
     },
   });
+
   const { fields, append, remove } = useFieldArray({
     control: methods.control,
     name: "phones",
@@ -38,32 +29,17 @@ function ContactCreatePage() {
       required: "There should at least be one phone number",
     },
   });
-  const { data: contactData } = useQuery<ContactData>(GET_CONTACT_LIST_QUERY);
-  const [addContact, { loading }] = useMutation(MUTATION_ADD_CONTACT);
-  const onSubmit = (data: FormValues) => {
-    const { firstName, lastName, phones } = data;
-    const contactExists = contactData?.contact.some((contact) => {
-      return contact.first_name === firstName && contact.last_name === lastName;
-    });
-    if (contactExists) {
-      toast.error("Contact already exists.");
-    } else {
-      addContact({
-        variables: {
-          first_name: firstName,
-          last_name: lastName,
-          phones: phones,
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        },
-        onCompleted: () => {
-          router.push("/");
-          toast.success("Contact added successfully.");
-        },
-      });
-    }
-  };
+
+  const { onSubmit, loading } = useAddContact({
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onCompleted: () => {
+      router.push("/");
+      toast.success("Contact added successfully.");
+    },
+  });
+
   return (
     <div className="bg-gray-50">
       <div className="mx-auto max-w-2xl min-h-screen py-8 px-4 sm:py-12 sm:px-6 lg:max-w-7xl lg:px-8">
