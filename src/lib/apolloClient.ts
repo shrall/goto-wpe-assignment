@@ -4,7 +4,7 @@ import { useMemo } from "react";
 function createApolloClient() {
     return new ApolloClient({
         link: new HttpLink({
-            uri: "https://wpe-hiring.tokopedia.net/graphql",
+            uri: process.env.NEXT_PUBLIC_API_URL,
             credentials: "same-origin",
         }),
         cache: new InMemoryCache(),
