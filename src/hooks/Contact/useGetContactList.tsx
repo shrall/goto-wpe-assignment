@@ -15,6 +15,7 @@ export function useGetContactList({
 }: UseGetContactListProps) {
   const [limit] = React.useState(10);
   const [offset, setOffset] = React.useState(0);
+
   const result = useQuery<ContactData>(GET_CONTACT_LIST_QUERY, {
     variables: {
       limit,

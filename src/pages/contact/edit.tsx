@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@apollo/client";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
@@ -7,32 +6,22 @@ import { AiFillSave } from "react-icons/ai";
 import { AiFillEdit } from "react-icons/ai";
 import { toast } from "sonner";
 
+import useAddContactPhoneNumber from "@/hooks/Contact/useAddContactPhoneNumber";
+import useEditContact from "@/hooks/Contact/useEditContact";
+import useEditContactPhoneNumber from "@/hooks/Contact/useEditContactPhoneNumber";
+import useGetContactDetails from "@/hooks/Contact/useGetContactDetails";
+
 import Button from "@/components/common/Button/Button";
 import Input from "@/components/common/Input/Input";
 
 import { REGEX } from "@/constant/regex";
-import { ContactData, ContactDetails } from "@/interfaces/Contact";
-import {
-  GET_CONTACT_DETAILS_QUERY,
-  GET_CONTACT_LIST_QUERY,
-  MUTATION_ADD_PHONE_NUMBER_TO_CONTACT,
-  MUTATION_EDIT_CONTACT,
-  MUTATION_EDIT_CONTACT_PHONE_NUMBER,
-} from "@/queries/Contact";
-
-type FormValues = {
-  firstName: string;
-  lastName: string;
-  phones: {
-    number: string;
-  }[];
-};
+import { ContactFormValues } from "@/interfaces/Contact";
 
 function ContactEditPage() {
   const router = useRouter();
   const id = router.query.id;
 
-  const methods = useForm<FormValues>({});
+  const methods = useForm<ContactFormValues>({});
   const { fields, append } = useFieldArray({
     control: methods.control,
     name: "phones",
@@ -40,107 +29,65 @@ function ContactEditPage() {
       required: "There should at least be one phone number",
     },
   });
+
   const [inputDisabled, setInputDisabled] = useState<boolean[]>(
     fields.map(() => true)
   );
-
   const toggleEdit = (index: number) => {
     const updatedDisabledState = [...inputDisabled];
     updatedDisabledState[index] = !updatedDisabledState[index];
     setInputDisabled(updatedDisabledState);
   };
 
-  const { data: contactDetails } = useQuery<ContactDetails>(
-    GET_CONTACT_DETAILS_QUERY,
-    {
-      variables: { id: id },
-      onCompleted: (data) => {
-        methods.setValue("firstName", data.contact_by_pk.first_name);
-        methods.setValue("lastName", data.contact_by_pk.last_name);
-        methods.setValue("phones", data.contact_by_pk.phones);
-        setInputDisabled(data.contact_by_pk.phones.map(() => true));
-      },
-    }
-  );
+  const { data: contactDetails } = useGetContactDetails({
+    id: id,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onCompleted: (data) => {
+      methods.setValue("firstName", data.contact_by_pk.first_name);
+      methods.setValue("lastName", data.contact_by_pk.last_name);
+      methods.setValue("phones", data.contact_by_pk.phones);
+      setInputDisabled(data.contact_by_pk.phones.map(() => true));
+    },
+  });
 
-  const { data: contactData } = useQuery<ContactData>(GET_CONTACT_LIST_QUERY);
-  const [editContact, { loading: nameLoading }] = useMutation(
-    MUTATION_EDIT_CONTACT
-  );
-  const [editContactPhoneNumber] = useMutation(
-    MUTATION_EDIT_CONTACT_PHONE_NUMBER
-  );
+  const { onSubmit, loading: nameLoading } = useEditContact({
+    id: id,
+    onError: (error) => {
+      toast.error(error.message);
+    },
+    onCompleted: () => {
+      router.push("/");
+      toast.success("Contact updated successfully.");
+    },
+  });
 
-  const onSubmit = (data: FormValues) => {
-    const { firstName, lastName } = data;
-    const contactExists = contactData?.contact.some((contact) => {
-      return (
-        contact.id !== parseInt(id as string) &&
-        contact.first_name === firstName &&
-        contact.last_name === lastName
+  const { handleUpdatePhoneNumber } = useEditContactPhoneNumber({
+    id: id,
+    onCompleted: (index) => {
+      setInputDisabled(
+        inputDisabled.map((value, i) => (i === index ? true : value))
       );
-    });
-    if (contactExists) {
-      toast.error("Contact already exists.");
-    } else {
-      editContact({
-        variables: {
-          id: id,
-          _set: {
-            first_name: firstName,
-            last_name: lastName,
-          },
-        },
-        onError: (error) => {
-          toast.error(error.message);
-        },
-        onCompleted: () => {
-          router.push("/");
-          toast.success("Contact edited successfully.");
-        },
-      });
-    }
-  };
+      toast.success("Phone number updated successfully.");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
-  const handleUpdatePhoneNumber = (index: number, number: string) => {
-    editContactPhoneNumber({
-      variables: {
-        pk_columns: {
-          contact_id: id,
-          number: contactDetails?.contact_by_pk.phones[index].number,
-        },
-        new_phone_number: number,
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-      onCompleted: () => {
-        toast.success("Phone number edited successfully.");
-        setInputDisabled(
-          inputDisabled.map((value, i) => (i === index ? true : value))
-        );
-      },
-    });
-  };
-
-  const [addPhoneNumber] = useMutation(MUTATION_ADD_PHONE_NUMBER_TO_CONTACT);
-  const handleAddPhoneNumber = (index: number, number: string) => {
-    addPhoneNumber({
-      variables: {
-        contact_id: id,
-        phone_number: number,
-      },
-      onError: (error) => {
-        toast.error(error.message);
-      },
-      onCompleted: () => {
-        toast.success("Phone number added successfully.");
-        setInputDisabled(
-          inputDisabled.map((value, i) => (i === index ? true : value))
-        );
-      },
-    });
-  };
+  const { handleAddPhoneNumber } = useAddContactPhoneNumber({
+    id: id,
+    onCompleted: (index) => {
+      setInputDisabled(
+        inputDisabled.map((value, i) => (i === index ? true : value))
+      );
+      toast.success("Phone number added successfully.");
+    },
+    onError: (error) => {
+      toast.error(error.message);
+    },
+  });
 
   return (
     <div className="bg-gray-50">
@@ -217,18 +164,22 @@ function ContactEditPage() {
                                 onClick={() =>
                                   contactDetails.contact_by_pk.phones.length <
                                   index + 1
-                                    ? handleAddPhoneNumber(
+                                    ? handleAddPhoneNumber({
                                         index,
-                                        methods.getValues(
+                                        number: methods.getValues(
                                           `phones.${index}.number`
-                                        )
-                                      )
-                                    : handleUpdatePhoneNumber(
+                                        ),
+                                      })
+                                    : handleUpdatePhoneNumber({
                                         index,
-                                        methods.getValues(
+                                        newNumber: methods.getValues(
                                           `phones.${index}.number`
-                                        )
-                                      )
+                                        ),
+                                        oldPhoneNumber:
+                                          contactDetails.contact_by_pk.phones[
+                                            index
+                                          ].number,
+                                      })
                                 }
                                 type="button"
                               >

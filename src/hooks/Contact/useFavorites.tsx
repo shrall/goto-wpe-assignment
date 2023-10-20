@@ -10,10 +10,12 @@ export function useFavorites({ debouncedSearchQuery }: UseFavoritesProps) {
   const [favorites, setFavorites] = useState<Contact[]>([]);
   const [filteredFavorites, setFilteredFavorites] = useState<Contact[]>([]);
 
+  //set the favorites from localstorage on initial load
   useEffect(() => {
     setFavorites(JSON.parse(localStorage.getItem("favorites") || "[]"));
   }, []);
 
+  //filter favorites based on search query
   useEffect(() => {
     setFilteredFavorites(
       favorites.filter(
