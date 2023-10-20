@@ -47,7 +47,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
           <>
             {ButtonIcon && (
               <ButtonIcon
-                className={clsx("-ml-1 mr-2 h-5 w-5", classNames?.icon)}
+                className={clsx("lg:-ml-1 lg:mr-2 h-5 w-5", classNames?.icon)}
                 aria-hidden="true"
               />
             )}

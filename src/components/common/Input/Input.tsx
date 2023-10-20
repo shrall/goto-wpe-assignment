@@ -16,7 +16,7 @@ export default function Input({
   id,
   type = "text",
   validation,
-  disabled = false,
+  className,
   ...rest
 }: InputProps) {
   const {
@@ -24,24 +24,25 @@ export default function Input({
     formState: { errors },
   } = useFormContext();
   const error = get(errors, id);
+
   return (
-    <div className="flex-1">
+    <div className="w-full">
       <label htmlFor={id} className="block text-sm font-normal text-gray-700">
         {label}
       </label>
       <div className="relative mt-1">
         <input
           {...register(id, validation)}
-          {...rest}
           type={type}
           className={clsx(
             error
               ? "border-red-500 focus:border-red-500 focus:ring-red-500"
               : "border-gray-300 focus:border-indigo-500 focus:ring-indigo-500",
-            disabled ? "bg-gray-100" : "bg-white",
-            "block w-full rounded-md shadow-sm"
+            "bg-white disabled:bg-gray-100",
+            "block w-full rounded-md shadow-sm",
+            className
           )}
-          disabled={disabled}
+          {...rest}
         />
 
         {error && (

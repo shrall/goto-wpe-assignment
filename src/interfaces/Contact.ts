@@ -22,3 +22,12 @@ export interface ContactDetails {
 export interface ContactData {
     contact: Contact[];
 }
+
+
+export interface ContactFormValues {
+    firstName: string;
+    lastName: string;
+    phones: {
+        number: string;
+    }[];
+};

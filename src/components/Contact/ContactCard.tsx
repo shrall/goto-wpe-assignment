@@ -23,6 +23,8 @@ type ContactCardProps = {
 const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
   ({ className, contact, toggleFavorite, onDelete, ...rest }, ref) => {
     const [deleteContact] = useMutation(MUTATION_DELETE_CONTACT);
+    const favorites = JSON.parse(localStorage.getItem("favorites") || "[]");
+
     return (
       <li
         ref={ref}
@@ -32,9 +34,7 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
         )}
         {...rest}
       >
-        {JSON.parse(localStorage.getItem("favorites") || "[]").every(
-          (favorite: Contact) => favorite.id !== contact.id
-        ) && (
+        {favorites.every((favorite: Contact) => favorite.id !== contact.id) && (
           <Menu
             as="div"
             className="absolute inline-block text-left top-2 right-2"
@@ -116,16 +116,16 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
               onClick={() => {
                 toggleFavorite(contact);
                 toast(
-                  JSON.parse(localStorage.getItem("favorites") || "[]").some(
+                  favorites.some(
                     (favorite: Contact) => favorite.id === contact.id
                   )
-                    ? `${contact.first_name} removed from favorites.`
-                    : `${contact.first_name} added to favorites.`
+                    ? `${contact.first_name} added from favorites.`
+                    : `${contact.first_name} removed to favorites.`
                 );
               }}
               className={clsx(
                 "absolute h-10 w-10 top-0 -right-2 bg-white border border-white rounded-full text-gray-400 hover:text-yellow-500 cursor-pointer",
-                JSON.parse(localStorage.getItem("favorites") || "[]").some(
+                favorites.some(
                   (favorite: Contact) => favorite.id === contact.id
                 ) && "text-yellow-500"
               )}

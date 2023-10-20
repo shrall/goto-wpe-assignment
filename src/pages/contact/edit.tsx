@@ -70,6 +70,7 @@ function ContactEditPage() {
   const [editContactPhoneNumber] = useMutation(
     MUTATION_EDIT_CONTACT_PHONE_NUMBER
   );
+
   const onSubmit = (data: FormValues) => {
     const { firstName, lastName } = data;
     const contactExists = contactData?.contact.some((contact) => {
@@ -170,7 +171,6 @@ function ContactEditPage() {
                               "First name cannot contain special characters.",
                           },
                         }}
-                        error={methods.formState.errors.firstName?.message}
                       />
                     </div>
 
@@ -186,7 +186,6 @@ function ContactEditPage() {
                               "Last name cannot contain special characters.",
                           },
                         }}
-                        error={methods.formState.errors.lastName?.message}
                       />
                     </div>
 
@@ -202,10 +201,6 @@ function ContactEditPage() {
                             validation={{
                               required: "Phone number cannot be empty.",
                             }}
-                            error={
-                              methods.formState.errors.phones?.[index]?.number
-                                ?.message
-                            }
                             disabled={inputDisabled[index]}
                           />
                           {inputDisabled[index] && (

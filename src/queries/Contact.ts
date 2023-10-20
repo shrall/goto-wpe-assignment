@@ -87,7 +87,6 @@ mutation EditContactById($id: Int!, $_set: contact_set_input) {
 
 
 export const MUTATION_EDIT_CONTACT_PHONE_NUMBER = gql`
-
 mutation EditPhoneNumber($pk_columns: phone_pk_columns_input!, $new_phone_number:String!) {
   update_phone_by_pk(pk_columns: $pk_columns, _set: {number: $new_phone_number}) {
     contact {
