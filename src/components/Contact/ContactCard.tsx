@@ -106,7 +106,7 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
         <div className="flex flex-1 flex-col px-8 pt-8 pb-4">
           <div className="relative h-32 w-32 mx-auto">
             <Image
-              src="https://randomuser.me/api/portraits/women/1.jpg"
+              src={`https://ui-avatars.com/api/?name=${contact.first_name}+${contact.last_name}&rounded=true}`}
               alt=""
               width={400}
               height={400}
