@@ -17,7 +17,7 @@ import Input from "@/components/common/Input/Input";
 import { REGEX } from "@/constant/regex";
 import { ContactFormValues } from "@/interfaces/Contact";
 
-function ContactEditPage() {
+function EditContactPage() {
   const router = useRouter();
   const id = router.query.id;
 
@@ -228,4 +228,4 @@ function ContactEditPage() {
   );
 }
 
-export default ContactEditPage;
+export default EditContactPage;

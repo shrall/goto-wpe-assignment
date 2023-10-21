@@ -13,7 +13,7 @@ import Input from "@/components/common/Input/Input";
 import { REGEX } from "@/constant/regex";
 import { ContactFormValues } from "@/interfaces/Contact";
 
-function ContactCreatePage() {
+function CreateContactPage() {
   const router = useRouter();
 
   const methods = useForm<ContactFormValues>({
@@ -101,6 +101,7 @@ function ContactCreatePage() {
                             }}
                           />
                           <button
+                            type="button"
                             onClick={() => {
                               remove(index);
                             }}
@@ -148,4 +149,4 @@ function ContactCreatePage() {
   );
 }
 
-export default ContactCreatePage;
+export default CreateContactPage;

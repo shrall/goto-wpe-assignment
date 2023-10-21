@@ -1,8 +1,8 @@
 import { screen, waitFor } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
-import { renderHomePage } from "../components/renderHomePage";
-import { returnGetContactListMock } from "../interfaces/GetContactListMockResponse";
+import { renderHomePage } from "./components/renderHomePage";
+import { returnGetContactListMock } from "./interfaces/GetContactListMockResponse";
 
 describe("Favorites", () => {
   it("shows that list is empty if there's no data found", async () => {
@@ -15,33 +15,8 @@ describe("Favorites", () => {
 
   it("successfully adds a contact to favorites", async () => {
     renderHomePage([
-      returnGetContactListMock("", [
-        {
-          created_at: "2023-10-20T04:18:09.600449+00:00",
-          first_name: "John",
-          id: 101,
-          last_name: "Donatello",
-          phones: [
-            {
-              number: "+625123412411",
-            },
-          ],
-        },
-        {
-          created_at: "2023-10-20T04:18:09.600449+00:00",
-          first_name: "Karen",
-          id: 102,
-          last_name: "Baker",
-          phones: [
-            {
-              number: "+625281818181",
-            },
-          ],
-        },
-      ]),
-      returnGetContactListMock(
-        "",
-        [
+      returnGetContactListMock({
+        result: [
           {
             created_at: "2023-10-20T04:18:09.600449+00:00",
             first_name: "John",
@@ -65,11 +40,9 @@ describe("Favorites", () => {
             ],
           },
         ],
-        [101]
-      ),
-      returnGetContactListMock(
-        "",
-        [
+      }),
+      returnGetContactListMock({
+        result: [
           {
             created_at: "2023-10-20T04:18:09.600449+00:00",
             first_name: "John",
@@ -93,8 +66,35 @@ describe("Favorites", () => {
             ],
           },
         ],
-        [101, 102]
-      ),
+        favoritesIds: [101],
+      }),
+      returnGetContactListMock({
+        result: [
+          {
+            created_at: "2023-10-20T04:18:09.600449+00:00",
+            first_name: "John",
+            id: 101,
+            last_name: "Donatello",
+            phones: [
+              {
+                number: "+625123412411",
+              },
+            ],
+          },
+          {
+            created_at: "2023-10-20T04:18:09.600449+00:00",
+            first_name: "Karen",
+            id: 102,
+            last_name: "Baker",
+            phones: [
+              {
+                number: "+625281818181",
+              },
+            ],
+          },
+        ],
+        favoritesIds: [101, 102],
+      }),
     ]);
     const favoriteButtons = await screen.findAllByRole("button", {
       name: /favorite/i,

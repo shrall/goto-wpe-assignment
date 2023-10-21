@@ -6,15 +6,15 @@ import { GET_CONTACT_LIST_QUERY } from "@/queries/Contact";
 export interface GetContactListMockResponse {
     request: {
         query: DocumentNode;
-        variables: {
-            limit: number;
-            offset: number;
-            where: {
-                id: { _nin: number[] };
-                _or: [
-                    { first_name: { _ilike: string } },
-                    { last_name: { _ilike: string } },
-                    { phones: { number: { _ilike: string } } }
+        variables?: {
+            limit?: number;
+            offset?: number;
+            where?: {
+                id?: { _nin?: number[] };
+                _or?: [
+                    { first_name?: { _ilike?: string } },
+                    { last_name?: { _ilike?: string } },
+                    { phones?: { number?: { _ilike?: string } } }
                 ];
             };
         };
@@ -26,15 +26,24 @@ export interface GetContactListMockResponse {
     };
 }
 
-export const returnGetContactListMock = (
-    searchQuery: string = "",
-    result: Contact[] = [],
-    favoritesIds: number[] = []
-): GetContactListMockResponse => {
+
+export const returnGetContactListMock = (args: {
+    searchQuery?: string,
+    result?: Contact[],
+    favoritesIds?: number[],
+    withPagination?: boolean
+} = {}): GetContactListMockResponse => {
+    const {
+        searchQuery = "",
+        result = [],
+        favoritesIds = [],
+        withPagination = true
+    } = args;
+
     return {
         request: {
             query: GET_CONTACT_LIST_QUERY,
-            variables: {
+            variables: withPagination ? {
                 limit: 10,
                 offset: 0,
                 where: {
@@ -45,6 +54,7 @@ export const returnGetContactListMock = (
                         { phones: { number: { _ilike: `%${searchQuery}%` } } },
                     ],
                 },
+            } : {
             },
         },
         result: {

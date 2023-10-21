@@ -33,6 +33,7 @@ export default function Input({
       <div className="relative mt-1">
         <input
           {...register(id, validation)}
+          id={id}
           type={type}
           className={clsx(
             error

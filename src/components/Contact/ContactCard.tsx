@@ -121,8 +121,8 @@ const ContactCard = React.forwardRef<HTMLLIElement, ContactCardProps>(
                   favorites.some(
                     (favorite: Contact) => favorite.id === contact.id
                   )
-                    ? `${contact.first_name} added to favorites.`
-                    : `${contact.first_name} removed from favorites.`
+                    ? `${contact.first_name} removed from favorites.`
+                    : `${contact.first_name} added to favorites.`
                 );
               }}
             >
