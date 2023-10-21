@@ -43,8 +43,11 @@ export default function Home() {
     <Layout>
       <div className="bg-white">
         <div className="mx-auto max-w-2xl py-8 px-4 sm:py-12 sm:px-6 lg:max-w-7xl lg:px-8">
+          <h2 className="block sm:hidden text-2xl font-bold tracking-tight text-gray-900 mb-2">
+            Phonebook
+          </h2>
           <div className="flex items-center justify-between gap-4 mb-4">
-            <h2 className="text-2xl font-bold tracking-tight text-gray-900">
+            <h2 className="hidden sm:block text-2xl font-bold tracking-tight text-gray-900">
               Phonebook
             </h2>
             <div className="w-full max-w-lg lg:max-w-xs ml-auto">
