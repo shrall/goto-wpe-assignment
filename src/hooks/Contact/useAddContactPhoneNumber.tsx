@@ -15,7 +15,7 @@ export default function useAddContactPhoneNumber(args: {
   }) => {
     addPhoneNumber({
       variables: {
-        contact_id: args.id,
+        contact_id: parseInt(args.id as string),
         phone_number: handlerArgs.number,
       },
       onError: (error) => args.onError(error),

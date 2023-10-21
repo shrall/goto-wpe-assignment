@@ -2,6 +2,7 @@ import { screen } from "@testing-library/react";
 import "@testing-library/jest-dom";
 
 import { renderHomePage } from "./components/renderHomePage";
+import { dummyContacts } from "./DummyData";
 import { returnGetContactListMock } from "./interfaces/GetContactListMockResponse";
 
 describe("Get Contact List", () => {
@@ -16,30 +17,7 @@ describe("Get Contact List", () => {
   it("successfully shows 2 contacts based on endpoint results", async () => {
     const { mocks } = renderHomePage([
       returnGetContactListMock({
-        result: [
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "John",
-            id: 101,
-            last_name: "Donatello",
-            phones: [
-              {
-                number: "+625123412411",
-              },
-            ],
-          },
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "Karen",
-            id: 102,
-            last_name: "Baker",
-            phones: [
-              {
-                number: "+625281818181",
-              },
-            ],
-          },
-        ],
+        result: dummyContacts,
       }),
     ]);
     // checks that there is 2 contact cards

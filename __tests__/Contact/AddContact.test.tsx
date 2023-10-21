@@ -1,8 +1,10 @@
-import { fireEvent, screen, waitFor } from "@testing-library/react";
+import { screen, waitFor } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import mockRouter from "next-router-mock";
 
 import { renderCreateContactPage } from "./components/renderCreateContactPage";
 import { renderHomePage } from "./components/renderHomePage";
+import { dummyContacts } from "./DummyData";
 import { returnAddContactMock } from "./interfaces/AddContactMockResponse";
 import { returnGetContactListMock } from "./interfaces/GetContactListMockResponse";
 
@@ -11,11 +13,14 @@ jest.mock("next/router", () => jest.requireActual("next-router-mock"));
 describe("Add Contact", () => {
   it("opens the create contact page", async () => {
     renderHomePage([returnGetContactListMock()]);
-    fireEvent.click(screen.getByRole("button", { name: /add new contact/i }));
+    const createButton = await screen.findByRole("button", {
+      name: /add new contact/i,
+    });
+    await userEvent.click(createButton);
     expect(mockRouter.asPath).toEqual("/contact/create");
   });
 
-  it("successfuly renders the form", () => {
+  it("successfully renders the form", () => {
     renderCreateContactPage([
       returnGetContactListMock({ withPagination: false }),
     ]);
@@ -55,25 +60,26 @@ describe("Add Contact", () => {
     ).toBeInTheDocument();
   });
 
-  it("opens the home page when the cancel button is clicked", () => {
+  it("opens the home page when the cancel button is clicked", async () => {
     renderCreateContactPage([
       returnGetContactListMock({ withPagination: false }),
     ]);
 
-    fireEvent.click(screen.getByRole("link", { name: /cancel/i }));
+    const cancelButton = await screen.findByRole("link", { name: /cancel/i });
+    await userEvent.click(cancelButton);
+
     expect(mockRouter.asPath).toEqual("/");
   });
 
-  it("successfuly adds a new phone number input", () => {
+  it("successfully adds a new phone number input", async () => {
     renderCreateContactPage([
       returnGetContactListMock({ withPagination: false }),
     ]);
 
-    fireEvent.click(
-      screen.getByRole("button", {
-        name: /\+ add a new number/i,
-      })
-    );
+    const addNewNumberButton = await screen.findByRole("button", {
+      name: /\+ add a new number/i,
+    });
+    await userEvent.click(addNewNumberButton);
 
     expect(
       screen.getByRole("textbox", {
@@ -83,37 +89,37 @@ describe("Add Contact", () => {
   });
 
   it("successfully sumbits the form with the correct values", async () => {
-    const contact = {
-      id: 1,
-      first_name: "John",
-      last_name: "Doe",
-      phones: [{ number: "1234567890" }, { number: "0987654321" }],
-      created_at: "2021-08-15T15:00:00.000Z",
-    };
+    const contact = dummyContacts[0];
+    contact.phones.push({ number: "0987654321" });
+
     renderCreateContactPage([
       returnGetContactListMock({ withPagination: false }),
       returnAddContactMock({ contact: contact }),
     ]);
 
-    fireEvent.change(screen.getByRole("textbox", { name: /first name/i }), {
-      target: { value: "John" },
-    });
-    fireEvent.change(screen.getByRole("textbox", { name: /last name/i }), {
-      target: { value: "Doe" },
-    });
-    fireEvent.change(screen.getByRole("textbox", { name: /phone 1/i }), {
-      target: { value: "1234567890" },
-    });
-    fireEvent.click(
+    await userEvent.type(
+      screen.getByRole("textbox", { name: /first name/i }),
+      contact.first_name
+    );
+    await userEvent.type(
+      screen.getByRole("textbox", { name: /last name/i }),
+      contact.last_name
+    );
+    await userEvent.type(
+      screen.getByRole("textbox", { name: /phone 1/i }),
+      contact.phones[0].number
+    );
+    await userEvent.click(
       screen.getByRole("button", {
         name: /\+ add a new number/i,
       })
     );
-    fireEvent.change(screen.getByRole("textbox", { name: /phone 2/i }), {
-      target: { value: "0987654321" },
-    });
+    await userEvent.type(
+      screen.getByRole("textbox", { name: /phone 2/i }),
+      contact.phones[1].number
+    );
 
-    fireEvent.click(
+    await userEvent.click(
       screen.getByRole("button", {
         name: /save/i,
       })

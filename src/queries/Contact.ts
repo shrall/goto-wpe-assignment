@@ -44,9 +44,10 @@ mutation AddContactWithPhones(
         }
     ) {
     returning {
+      id
+      created_at
       first_name
       last_name
-      id
       phones {
         number
       }

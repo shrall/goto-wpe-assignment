@@ -29,7 +29,7 @@ export default function useEditContact(args: {
     } else {
       editContact({
         variables: {
-          id: args.id as string,
+          id: parseInt(args.id as string),
           _set: {
             first_name: firstName,
             last_name: lastName,

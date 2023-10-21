@@ -1,6 +1,6 @@
 import { DocumentNode } from "graphql";
 
-import { Contact } from "@/interfaces/Contact";
+import { Contact, ContactData } from "@/interfaces/Contact";
 import { GET_CONTACT_LIST_QUERY } from "@/queries/Contact";
 
 export interface GetContactListMockResponse {
@@ -20,9 +20,7 @@ export interface GetContactListMockResponse {
         };
     };
     result: {
-        data: {
-            contact: Contact[];
-        };
+        data: ContactData;
     };
 }
 

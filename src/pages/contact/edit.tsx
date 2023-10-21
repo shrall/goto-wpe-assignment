@@ -152,6 +152,7 @@ function EditContactPage() {
                           />
                           {inputDisabled[index] && (
                             <button
+                              aria-label="edit phone number"
                               onClick={() => toggleEdit(index)}
                               type="button"
                             >
@@ -161,6 +162,7 @@ function EditContactPage() {
                           {!inputDisabled[index] &&
                             contactDetails?.contact_by_pk && (
                               <button
+                                aria-label="save phone number"
                                 onClick={() =>
                                   contactDetails.contact_by_pk.phones.length <
                                   index + 1

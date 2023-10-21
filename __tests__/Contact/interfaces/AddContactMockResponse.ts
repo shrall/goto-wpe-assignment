@@ -17,14 +17,7 @@ export interface AddContactMockResponse {
     result: {
         data: {
             insert_contact: {
-                returning: {
-                    id: number;
-                    first_name: string;
-                    last_name: string;
-                    phones: {
-                        number: string;
-                    }[];
-                }[];
+                returning: Contact[];
             };
         };
     };
@@ -47,12 +40,7 @@ export const returnAddContactMock = (
             data: {
                 insert_contact: {
                     returning: [
-                        {
-                            id: 1,
-                            first_name: contact.first_name,
-                            last_name: contact.last_name,
-                            phones: contact.phones,
-                        },
+                        contact
                     ],
                 },
             },

@@ -1,29 +1,18 @@
 export interface Contact {
+    id: number;
     created_at: string;
     first_name: string;
-    id: number;
     last_name: string;
     phones: {
         number: string;
     }[];
 }
 export interface ContactDetails {
-    contact_by_pk: {
-        last_name: string;
-        id: number;
-        first_name: string;
-        created_at: string;
-        phones: {
-            number: string;
-        }[];
-    };
+    contact_by_pk: Contact;
 }
-
 export interface ContactData {
     contact: Contact[];
 }
-
-
 export interface ContactFormValues {
     firstName: string;
     lastName: string;

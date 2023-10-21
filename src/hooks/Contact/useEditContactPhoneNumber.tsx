@@ -19,7 +19,7 @@ export default function useEditContactPhoneNumber(args: {
     editContactPhoneNumber({
       variables: {
         pk_columns: {
-          contact_id: args.id,
+          contact_id: parseInt(args.id as string),
           number: handlerArgs.oldPhoneNumber,
         },
         new_phone_number: handlerArgs.newNumber,

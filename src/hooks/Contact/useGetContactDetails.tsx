@@ -9,7 +9,7 @@ export default function useGetContactDetails(args: {
   onError: (error: Error) => void;
 }) {
   const result = useQuery<ContactDetails>(GET_CONTACT_DETAILS_QUERY, {
-    variables: { id: args.id },
+    variables: { id: parseInt(args.id as string) },
     onCompleted: (data) => args.onCompleted(data),
     onError: (error) => args.onError(error),
   });

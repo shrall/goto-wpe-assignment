@@ -1,7 +1,9 @@
-import { screen, waitFor } from "@testing-library/react";
+import { screen } from "@testing-library/react";
+import userEvent from "@testing-library/user-event";
 import "@testing-library/jest-dom";
 
 import { renderHomePage } from "./components/renderHomePage";
+import { dummyContacts } from "./DummyData";
 import { returnGetContactListMock } from "./interfaces/GetContactListMockResponse";
 
 describe("Favorites", () => {
@@ -16,83 +18,14 @@ describe("Favorites", () => {
   it("successfully adds a contact to favorites", async () => {
     renderHomePage([
       returnGetContactListMock({
-        result: [
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "John",
-            id: 101,
-            last_name: "Donatello",
-            phones: [
-              {
-                number: "+625123412411",
-              },
-            ],
-          },
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "Karen",
-            id: 102,
-            last_name: "Baker",
-            phones: [
-              {
-                number: "+625281818181",
-              },
-            ],
-          },
-        ],
+        result: dummyContacts,
       }),
       returnGetContactListMock({
-        result: [
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "John",
-            id: 101,
-            last_name: "Donatello",
-            phones: [
-              {
-                number: "+625123412411",
-              },
-            ],
-          },
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "Karen",
-            id: 102,
-            last_name: "Baker",
-            phones: [
-              {
-                number: "+625281818181",
-              },
-            ],
-          },
-        ],
+        result: dummyContacts,
         favoritesIds: [101],
       }),
       returnGetContactListMock({
-        result: [
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "John",
-            id: 101,
-            last_name: "Donatello",
-            phones: [
-              {
-                number: "+625123412411",
-              },
-            ],
-          },
-          {
-            created_at: "2023-10-20T04:18:09.600449+00:00",
-            first_name: "Karen",
-            id: 102,
-            last_name: "Baker",
-            phones: [
-              {
-                number: "+625281818181",
-              },
-            ],
-          },
-        ],
+        result: dummyContacts,
         favoritesIds: [101, 102],
       }),
     ]);
@@ -102,13 +35,13 @@ describe("Favorites", () => {
     expect(favoriteButtons).toHaveLength(2);
 
     const firstFavoriteButton = favoriteButtons[0];
-    await waitFor(() => {
-      firstFavoriteButton.click();
-    });
+    await userEvent.click(firstFavoriteButton);
 
     const favoritesSection = await screen.findByRole("region", {
       name: /favorites/i,
     });
-    expect(favoritesSection).toHaveTextContent(/john donatello/i);
+    expect(favoritesSection).toHaveTextContent(
+      new RegExp(dummyContacts[0].first_name, "i")
+    );
   });
 });
